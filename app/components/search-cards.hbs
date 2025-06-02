@@ -1,0 +1,101 @@
+<div class="search-container">
+  <input
+    type="text"
+    placeholder="Search Pokémon cards..."
+    value={{this.query}}
+    {{on "input" this.updateQuery}}
+    {{on "keydown" this.handleKeydown}}
+  />
+
+  <select class="set-select" {{on "change" this.updateSelectedSet}}>
+    <option value="">All Sets</option>
+    {{#each this.availableSets as |set|}}
+      <option
+        value={{set.id}}
+        selected={{if (eq set.id this.selectedSet) "selected" undefined}}
+      >
+        {{set.name}}
+      </option>
+    {{/each}}
+  </select>
+
+  <div class="search-buttons">
+<button 
+  {{on "click" this.search}} 
+  disabled={{and (not this.query) (not this.selectedSet)}}
+>
+  Search
+</button>
+    <button {{on "click" this.searchCharizard}}>Charizard 🔥</button>
+  </div>
+  <select class="sort-select" {{on "change" this.updateSort}}>
+  <option value="">Sort By</option>
+  <option value="number">Card Number</option>
+  <option value="name">Name</option>
+  <option value="-hp">HP (High to Low)</option>
+  <option value="hp">HP (Low to High)</option>
+</select>
+
+</div>
+
+{{#if this.loading}}
+  <div class="loader-container">
+    <div class="spinner"></div>
+    <p class="loader-text">Searching...</p>
+  </div>
+{{else if this.results.length}}
+  <div class="cards-grid">
+    {{#each this.results as |card|}}
+      <div
+        class="card"
+        style={{this.cardStyle card}}
+        {{on "click" (fn this.openCardModal card)}}
+      >
+        <img src={{card.images.large}} alt={{card.name}} />
+        <div class="card-details">
+          <p class="card-name">{{card.name}}</p>
+          <p class="card-meta">Set: {{card.set.name}}</p>
+          <p class="card-meta">
+            Type: {{card.supertype}}
+            {{#if card.subtypes}} ({{join card.subtypes ", "}}){{/if}}
+          </p>
+          {{#if card.rarity}}<p class="card-meta">Rarity: {{card.rarity}}</p>{{/if}}
+          {{#if card.hp}}<p class="card-meta">HP: {{card.hp}}</p>{{/if}}
+          {{#if card.types}}<p class="card-meta">Element: {{join card.types ", "}}</p>{{/if}}
+          {{#if card.artist}}<p class="card-meta">Artist: {{card.artist}}</p>{{/if}}
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{else}}
+  <div class="empty-state">
+    <p>🧐 Nothing found. Try searching for a different Pokémon!</p>
+  </div>
+{{/if}}
+
+{{#if this.selectedCard}}
+  <div class="modal-backdrop" {{on "click" this.closeModal}}>
+    <div class="modal" {{on "click" this.preventBackdropClose}}>
+      <div class="modal-title">
+        <h2>{{this.selectedCard.name}}</h2>
+      </div>
+      <div class="modal-content">
+        <div class="modal-left">
+          <img src={{this.selectedCard.images.large}} alt={{this.selectedCard.name}} />
+        </div>
+        <div class="modal-right">
+          <ul>
+            <li><strong>Set:</strong> {{this.selectedCard.set.name}}</li>
+            <li><strong>Type:</strong> {{this.selectedCard.supertype}}</li>
+            {{#if this.selectedCard.subtypes}}<li><strong>Subtypes:</strong> {{join this.selectedCard.subtypes ", "}}</li>{{/if}}
+            {{#if this.selectedCard.types}}<li><strong>Element:</strong> {{join this.selectedCard.types ", "}}</li>{{/if}}
+            {{#if this.selectedCard.rarity}}<li><strong>Rarity:</strong> {{this.selectedCard.rarity}}</li>{{/if}}
+            {{#if this.selectedCard.hp}}<li><strong>HP:</strong> {{this.selectedCard.hp}}</li>{{/if}}
+            {{#if this.selectedCard.artist}}<li><strong>Artist:</strong> {{this.selectedCard.artist}}</li>{{/if}}
+            {{#if this.selectedCard.flavorText}}<li><strong>Flavor Text:</strong> {{this.selectedCard.flavorText}}</li>{{/if}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{{/if}}
