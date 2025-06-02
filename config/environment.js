@@ -40,11 +40,11 @@ module.exports = function (environment) {
     ENV.APP.autoboot = false;
   }
 
-  if (environment === 'production') {
-    ENV.locationType = 'hash';
-    ENV.rootURL = '/pokemon/';
-  }
-  
+if (environment === 'production') {
+  ENV.locationType = 'hash';
+  ENV.rootURL = '/pokemon/';
+}
+
 
   return ENV;
 };
