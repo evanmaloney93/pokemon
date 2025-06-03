@@ -1,33 +1,47 @@
 import Service from '@ember/service';
-import axios from 'axios';
-
-const API_BASE = 'https://api.pokemontcg.io/v2';
+import { tracked } from '@glimmer/tracking';
 
 export default class PokemonCardSearchService extends Service {
-    async searchCardsByName(name = '', setId = '', orderBy = '') {
-        const queryParts = [];
-      
-        if (name.trim()) queryParts.push(`name:${name.trim()}`);
-        if (setId.trim()) queryParts.push(`set.id:${setId.trim()}`);
-      
-        const params = {};
-        if (queryParts.length > 0) {
-          params.q = queryParts.join(' ');
-        } else {
-          return [];
-        }
-      
-        if (orderBy) {
-          params.orderBy = orderBy;
-        }
-      
-        const res = await axios.get(`https://api.pokemontcg.io/v2/cards`, { params });
-        return res.data.data;
-      }
-      
+  @tracked setsCache = null;
 
   async fetchAllSets() {
-    const res = await axios.get(`${API_BASE}/sets`);
-    return res.data.data;
+    if (this.setsCache) {
+      console.log('✅ Using cached sets');
+      return this.setsCache;
+    }
+
+    try {
+      console.log('📁 Fetching sets from local JSON');
+const response = await fetch('/data/sets.json');
+      const data = await response.json();
+      this.setsCache = data.data.sort((a, b) => a.name.localeCompare(b.name));
+      return this.setsCache;
+    } catch (e) {
+      console.error('Failed to load sets:', e);
+      return [];
+    }
   }
+
+
+  async searchCardsByName(name, setId = '', sortBy = '') {
+    let query = `name:"${name}"`;
+    if (setId) {
+      query += ` AND set.id:"${setId}"`;
+    }
+
+    let url = `https://api.pokemontcg.io/v2/cards?q=${encodeURIComponent(query)}`;
+    if (sortBy) {
+      url += `&orderBy=${encodeURIComponent(sortBy)}`;
+    }
+
+    try {
+      const result = await fetch(url);
+      const json = await result.json();
+      return json.data;
+    } catch (e) {
+      console.error('Search failed:', e);
+      return [];
+    }
+  }
+
 }
