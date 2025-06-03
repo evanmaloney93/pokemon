@@ -18,13 +18,13 @@
       </option>
     {{/each}}
   </select>
-<div class="search-buttons">
-  <button {{on "click" this.search}} disabled={{and (not this.query) (not this.selectedSet)}}>Search</button>
-  <button class="charizard-btn" {{on "click" this.searchCharizard}}>Charizard 🔥</button>
-  <button class="pikachu-btn" {{on "click" this.searchPikachu}}>Pikachu ⚡</button>
-  <button class="chikorita-btn" {{on "click" this.searchChikorita}}>Chikorita 🌿</button>
-</div>
 
+  <div class="search-buttons">
+    <button type="button" {{on "click" this.search}} disabled={{and (not this.query) (not this.selectedSet)}}>Search</button>
+    <button type="button" class="charizard-btn" {{on "click" this.searchCharizard}}>Charizard 🔥</button>
+    <button type="button" class="pikachu-btn" {{on "click" this.searchPikachu}}>Pikachu ⚡</button>
+    <button type="button" class="chikorita-btn" {{on "click" this.searchChikorita}}>Chikorita 🌿</button>
+  </div>
 
   <select class="sort-select" {{on "change" this.updateSort}}>
     <option value="">Sort By</option>
@@ -35,41 +35,39 @@
   </select>
 </div>
 
-
 {{#if this.loading}}
   <div class="loader-container">
     <div class="spinner"></div>
     <p class="loader-text">Searching...</p>
   </div>
 {{else if this.results.length}}
-<div class="cards-grid">
-  {{#each this.visibleResults as |card|}}
-    <div
-      class="card"
-      style={{this.cardStyle card}}
-      {{on "click" (fn this.openCardModal card)}}
-    >
-      <img src={{card.images.large}} alt={{card.name}} />
-      <div class="card-details">
-        <p class="card-name">{{card.name}}</p>
-        <p class="card-meta">Set: {{card.set.name}}</p>
-        <p class="card-meta">
-          Type: {{card.supertype}}
-          {{#if card.subtypes}} ({{join card.subtypes ", "}}){{/if}}
-        </p>
-        {{#if card.rarity}}<p class="card-meta">Rarity: {{card.rarity}}</p>{{/if}}
-        {{#if card.hp}}<p class="card-meta">HP: {{card.hp}}</p>{{/if}}
-        {{#if card.types}}<p class="card-meta">Element: {{join card.types ", "}}</p>{{/if}}
-        {{#if card.artist}}<p class="card-meta">Artist: {{card.artist}}</p>{{/if}}
+  <div class="cards-grid">
+    {{#each this.visibleResults as |card|}}
+      <div
+        class="card"
+        style={{this.cardStyle card}}
+        {{on "click" (fn this.openCardModal card)}}
+      >
+        <img src={{card.images.large}} alt={{card.name}} />
+        <div class="card-details">
+          <p class="card-name">{{card.name}}</p>
+          <p class="card-meta">Set: {{card.set.name}}</p>
+          <p class="card-meta">
+            Type: {{card.supertype}}
+            {{#if card.subtypes}} ({{join card.subtypes ", "}}){{/if}}
+          </p>
+          {{#if card.rarity}}<p class="card-meta">Rarity: {{card.rarity}}</p>{{/if}}
+          {{#if card.hp}}<p class="card-meta">HP: {{card.hp}}</p>{{/if}}
+          {{#if card.types}}<p class="card-meta">Element: {{join card.types ", "}}</p>{{/if}}
+          {{#if card.artist}}<p class="card-meta">Artist: {{card.artist}}</p>{{/if}}
+        </div>
       </div>
-    </div>
-  {{/each}}
+    {{/each}}
 
-  {{#if this.hasMore}}
-    <div {{did-insert this.loadMoreIfNeeded}} style="height: 1px;"></div>
-  {{/if}}
-</div>
-
+    {{#if this.hasMore}}
+      <div {{did-insert this.loadMoreIfNeeded}} style="height: 1px;"></div>
+    {{/if}}
+  </div>
 {{else}}
   <div class="empty-state">
     <p>🧐 Nothing found. Try searching for a different Pokémon!</p>
