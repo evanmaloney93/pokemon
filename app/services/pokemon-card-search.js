@@ -12,7 +12,7 @@ export default class PokemonCardSearchService extends Service {
 
     try {
       console.log('📁 Fetching sets from local JSON');
-const response = await fetch('/data/sets.json');
+      const response = await fetch('data/sets.json');
       const data = await response.json();
       this.setsCache = data.data.sort((a, b) => a.name.localeCompare(b.name));
       return this.setsCache;

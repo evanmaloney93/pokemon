@@ -13,7 +13,7 @@ module.exports = function (defaults) {
     },
 
     fingerprint: {
-      prepend: 'https://evanmaloney93.github.io/pokemon/',
+      // Optional: leave this empty or remove entirely
     }
   });
 

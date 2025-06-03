@@ -7,17 +7,17 @@
     {{on "keydown" this.handleKeydown}}
   />
 
-  <select class="set-select" {{on "change" this.updateSelectedSet}}>
-    <option value="">All Sets</option>
-    {{#each this.availableSets as |set|}}
-      <option
-        value={{set.id}}
-        selected={{if (eq set.id this.selectedSet) "selected" undefined}}
-      >
-        {{set.name}}
-      </option>
-    {{/each}}
-  </select>
+<select class="set-select" {{on "change" this.updateSelectedSet}}>
+  <option value="">All Sets</option>
+  {{#each this.availableSets as |set|}}
+    <option
+      value={{set.id}}
+      selected={{if (eq set.id this.selectedSet) "selected" undefined}}
+    >
+      {{set.name}}
+    </option>
+  {{/each}}
+</select>
 
   <div class="search-buttons">
     <button type="button" {{on "click" this.search}} disabled={{and (not this.query) (not this.selectedSet)}}>Search</button>

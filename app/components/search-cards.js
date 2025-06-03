@@ -21,9 +21,10 @@ export default class SearchCardsComponent extends Component {
     this.loadSets();
   }
 
-  async loadSets() {
-    this.availableSets = await this.cardSearch.fetchAllSets();
-  }
+async loadSets() {
+  this.availableSets = await this.cardSearch.fetchAllSets();
+  console.log('✅ Loaded sets:', this.availableSets);
+}
 
   get visibleResults() {
     return this.results.slice(0, this.currentPage * this.cardsPerPage);
